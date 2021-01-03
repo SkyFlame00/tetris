@@ -3,12 +3,15 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "helpers/MatrixTool.h"
 
-MenuObject::MenuObject(Shader *shader, float originX, float originY)
+MenuObject::MenuObject(Matrix* projection, Shader *shader, float originX, float originY, int width, int height)
 	: shader(shader),
 	  VAO(0),
 	  VBO(0),
 	  originX(originX),
-	  originY(originY)
+	  originY(originY),
+	  projection(projection),
+	  width(width),
+	  height(height)
 {
 	model.matrix = glm::mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -21,7 +24,6 @@ MenuObject::MenuObject(Shader *shader, float originX, float originY)
 	if (model.loc == -1)
 	{
 		std::cout << "ERROR::MENU_OBJECT::CONSTRUCTOR: Location of model matrix cannot be found." << std::endl;
-		return;
 	}
 
 	pressed.val = false;
@@ -30,24 +32,53 @@ MenuObject::MenuObject(Shader *shader, float originX, float originY)
 	if (pressed.loc == -1)
 	{
 		std::cout << "ERROR::MENU_OBJECT::CONSTRUCTOR: Location of 'pressed' uniform cannot be found." << std::endl;
-		return;
 	}
 }
 
-Button::Button(Shader *shader, float xpos, float ypos, float width, float height, glm::vec3 color, void *eventData)
-	: MenuObject(shader, xpos, ypos),
-	  width(width),
-	  height(height),
+void MenuObject::SetOriginX(int x)
+{
+	originX = x;
+}
+
+void MenuObject::SetOriginY(int y)
+{
+	originY = y;
+}
+
+int MenuObject::GetOriginX()
+{
+	return originX;
+}
+
+int MenuObject::GetOriginY()
+{
+	return originY;
+}
+
+int MenuObject::GetWidth()
+{
+	return width;
+}
+
+int MenuObject::GetHeight()
+{
+	return height;
+}
+
+
+ButtonPackage::Button::Button(Matrix* projection, Shader* shader, TextRenderer* textRenderer, s_AppearanceSettings *aSettings, s_TextSettings *tSettings, void* eventData)
+	: MenuObject(projection, shader, aSettings->xpos, aSettings->ypos, aSettings->width, aSettings->height),
 	  eventData(eventData),
 	  vertices{
-		0    , 0     , 0.0f, color.x, color.y, color.z,
-		width, 0     , 0.0f, color.x, color.y, color.z,
-		0    , height, 0.0f, color.x, color.y, color.z,
+		0    , 0     , 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
+		(float)aSettings->width, 0     , 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
+		0    , (float)aSettings->height, 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
 
-		0    , height, 0.0f, color.x, color.y, color.z,
-		width, height, 0.0f, color.x, color.y, color.z,
-		width, 0     , 0.0f, color.x, color.y, color.z,
-	  }
+		0    , (float)aSettings->height, 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
+		(float)aSettings->width, (float)aSettings->height, 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
+		(float)aSettings->width, 0     , 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
+	  },
+	  textRenderer(textRenderer)
 {
 	/* Generate vertices */
 	glGenVertexArrays(1, &VAO);
@@ -64,34 +95,69 @@ Button::Button(Shader *shader, float xpos, float ypos, float width, float height
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	/* Adjust the model matrix. The origin of a button is the top-left corner */
-	model.matrix[0][3] = xpos;
-	model.matrix[1][3] = ypos;
+	model.matrix[0][3] = aSettings->xpos;
+	model.matrix[1][3] = aSettings->ypos;
+
+	if (tSettings->text)
+	{
+		text = tSettings->text;
+		textRenderer->GetMeasurements(tSettings->text, &textWidth, &textHeight);
+		textX = (aSettings->xpos + aSettings->width / 2) - textWidth / 2;
+		textY = (aSettings->ypos + aSettings->height / 2) + textRenderer->baselineShift;
+	}
+
+	textColor = tSettings->color;
+	textColorPressed = tSettings->colorPressed;
 }
 
-void Button::Render()
+void ButtonPackage::Button::SetOriginX(int x)
 {
+	originX = x;
+	textX = (x + width / 2) - textWidth / 2;
+}
+
+void ButtonPackage::Button::SetOriginY(int y)
+{
+	originY = y;
+	textY = (y + height / 2) + textRenderer->baselineShift;
+}
+
+void ButtonPackage::Button::Render()
+{
+	glm::mat4 modelMatrix = {
+		1.0f, 0.0f, 0.0f, originX,
+		0.0f, 1.0f, 0.0f, originY,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 1.0f,
+	};
+
 	shader->use();
 	glBindVertexArray(VAO);
-	glUniformMatrix4fv(model.loc, 1, GL_TRUE, glm::value_ptr(model.matrix));
+	glUniformMatrix4fv(projection->loc, 1, GL_TRUE, glm::value_ptr(*projection->matrix));
+	glUniformMatrix4fv(model.loc, 1, GL_TRUE, glm::value_ptr(modelMatrix));
 	glUniform1i(pressed.loc, pressed.val);
 	glDrawArrays(GL_TRIANGLES, 0, VERTICES_NUM);
+	glBindVertexArray(0);
+
+	textRenderer->Render(text, textX, textY, 1.0f, pressed.val ? textColorPressed : textColor);
 }
 
-bool Button::OverlapsPoint(float xpos, float ypos)
+bool ButtonPackage::Button::OverlapsPoint(float xpos, float ypos)
 {
 	return (xpos > originX && xpos < originX + width)
 		&& (ypos > originY && ypos < originY + height);
 }
 
-void Button::HandleLeftMousePressed()
+void ButtonPackage::Button::HandleLeftMousePressed()
 {
 	pressed.val = true;
 }
 
-void Button::HandleLeftMouseReleased(bool releasedOnObject)
+void ButtonPackage::Button::HandleLeftMouseReleased(bool releasedOnObject)
 {
 	if (!pressed.val)
 	{
@@ -106,12 +172,12 @@ void Button::HandleLeftMouseReleased(bool releasedOnObject)
 	pressed.val = false;
 }
 
-void Button::OnClick(void (*callback)(void*))
+void ButtonPackage::Button::OnClick(void (*callback)(void*))
 {
 	onClickFn = callback;
 }
 
-void Button::Click()
+void ButtonPackage::Button::Click()
 {
 	onClickFn(eventData);
 }

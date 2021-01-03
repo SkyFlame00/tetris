@@ -170,17 +170,17 @@ void TetrisGrid::Render()
 	glUniformMatrix4fv(projection.loc, 1, GL_TRUE, glm::value_ptr(*projection.matrix));
 
 	{
-		glUniform1i(isCellLoc, true);
-		glBindVertexArray(cellVAO);
-		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, rows * cols);
-		glBindVertexArray(0);
-	}
-
-	{
 		glUniform1i(isCellLoc, false);
 		glUniformMatrix4fv(backgroundTranslation.loc, 1, GL_TRUE, glm::value_ptr(*backgroundTranslation.matrix));
 		glBindVertexArray(backgroundVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+	}
+
+	{
+		glUniform1i(isCellLoc, true);
+		glBindVertexArray(cellVAO);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, rows * cols);
 		glBindVertexArray(0);
 	}
 }

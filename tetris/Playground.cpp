@@ -695,6 +695,7 @@ void Playground::Update(float deltaTime, UserInput* userInput)
 
 void Playground::Render()
 {
-	tetrisGrid->Render();
 	ntWindow->Render();
+	tetrisGrid->Render();
+	
 }

@@ -15,13 +15,13 @@ void mousePressed(GLFWwindow* window, int button, int action, int mods);
 void resetUserInput(UserInput* userInput);
 void cleanup();
 
-const int SCR_WIDTH = 800;
-const int SCR_HEIGHT = 600;
-const int GAME_XUNITS = 800;
-const int GAME_YUNITS = 600;
-
 int main()
 {
+	const int SCR_WIDTH = 800;
+	const int SCR_HEIGHT = 600;
+	const int GAME_XUNITS = 800;
+	const int GAME_YUNITS = 600;
+
 	/* Seed random number generator */
 	std::srand(std::time(nullptr));
 
@@ -41,11 +41,6 @@ int main()
 
 	glm::vec4 color = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
 	int clearMask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
-
-	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	UserInput* userInput = new UserInput;
 	glfwSetWindowUserPointer(window, userInput);
@@ -55,41 +50,6 @@ int main()
 
 	/* Time delta */
 	float lastFrame = (float)glfwGetTime();
-
-	Shader shader2("shaders/test.vert.glsl", "shaders/test.frag.glsl");
-	GLuint boxVAO, boxVBO;
-	float vertices[] = {
-		0.130000, -0.223333, 0.000000, 16.000000,
-		0.130000, -0.166667, 0.000000, -1.000000,
-		0.147500, -0.166667, 0.000000, -8.000000,
-		0.130000, -0.223333, 0.000000, 16.000000,
-		0.147500, -0.166667, 0.000000, -8.000000,
-		0.147500, -0.223333, 0.000000, 9.000000
-	};
-	float vertices2[] = {
-		0.130000, 0.223333, 0.000000, -118.000000,
-		0.130000, 0.166667, 0.000000, -101.000000,
-		0.147500, 0.166667, 0.000000, -108.000000,
-		0.130000, 0.223333, 0.000000, -118.000000,
-		0.147500, 0.166667, 0.000000, -108.000000,
-		0.147500, 0.223333, 0.000000, -125.000000
-	};
-	float vertices3[] = {
-		0.130000, -0.223333, 0.000000, 0,
-		0.130000, -0.166667, 0.000000, -0,
-		0.147500, -0.166667, 0.000000, -0,
-	};
-	glGenVertexArrays(1, &boxVAO);
-	glGenBuffers(1, &boxVBO);
-
-	glBindVertexArray(boxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices3), &vertices3, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
 
 	/* Game loop */
 	while (!windowManager.ShouldClose())
@@ -101,18 +61,10 @@ int main()
 		glClearColor(color.x, color.y, color.z, color.w);
 		glClear(clearMask);
 
-		
-
 		game.Update(deltaTime, userInput);
 		game.Render();
 
-		shader2.use();
-		glBindVertexArray(boxVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
-
 		resetUserInput(userInput);
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

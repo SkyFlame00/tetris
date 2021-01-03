@@ -53,5 +53,5 @@ void List<T>::ForEach(void (*fn)(ListItem<T>*))
 }
 
 template class List<MenuObject*>;
-template class List<Button*>;
+template class List<ButtonPackage::Button*>;
 template class List<void (*)(GLFWwindow*)>;

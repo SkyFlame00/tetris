@@ -11,7 +11,7 @@ public:
 	~MenuWindow();
 
 	//void CheckHover(Cursor* cursor);
-	void AddObject(Button* object);
+	void AddObject(ButtonPackage::Button* object);
 	void Render();
 	void HandleLeftMousePressed();
 	void HandleLeftMouseReleased();
