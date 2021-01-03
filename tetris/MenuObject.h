@@ -96,6 +96,4 @@ namespace ButtonPackage
 	};
 }
 
-
-
 #endif // !MENU_OBJECT_H
