@@ -17,6 +17,7 @@
 
 #include "LayoutElement.h"
 #include "LayoutContainer.h"
+#include "Button.h"
 
 typedef void (*WindowCallback)(GLFWwindow* window);
 

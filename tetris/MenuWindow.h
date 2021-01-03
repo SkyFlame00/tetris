@@ -3,6 +3,7 @@
 
 #include "data_structures/List.h"
 #include "MenuObject.h"
+#include "Button.h"
 
 class MenuWindow
 {

@@ -31,9 +31,6 @@ TextRenderer* FontLoader::Load(glm::mat4* projection, char* fontPath, int width,
 
 	std::map<char, Character>* Characters = new std::map<char, Character>;
 
-	std::cout << "Asc: " << (face->ascender >> 6) << std::endl;
-	std::cout << "Asc: " << (face->descender >> 6) << std::endl;
-
 	// load first 128 characters of ASCII set
 	for (unsigned char c = 0; c < 128; c++)
 	{

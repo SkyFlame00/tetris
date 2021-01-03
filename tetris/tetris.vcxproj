@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="data_structures\List.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="helpers\MatrixTool.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="data_structures\List.h" />
     <ClInclude Include="data_structures\misc.h" />
     <ClInclude Include="Game.h" />
