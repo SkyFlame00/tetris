@@ -30,10 +30,6 @@ protected:
 		int loc;
 		glm::mat4 matrix;
 	} model;
-	struct {
-		int loc;
-		bool val;
-	} pressed;
 	Matrix* projection;
 	int width, height;
 };

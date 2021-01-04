@@ -90,6 +90,9 @@
     <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -152,14 +155,14 @@
     <ClInclude Include="Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vendor\stb_image.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.frag">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="shader.vert">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="shaders\rect.vert.glsl">
       <Filter>Source Files\shaders</Filter>
     </None>
@@ -176,6 +179,12 @@
       <Filter>Source Files\shaders</Filter>
     </None>
     <None Include="shaders\test.vert.glsl">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\sprite.frag.glsl">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\sprite.vert.glsl">
       <Filter>Source Files\shaders</Filter>
     </None>
   </ItemGroup>

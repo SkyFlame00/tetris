@@ -33,7 +33,7 @@ void MenuWindow::Render()
 //
 //}
 
-void MenuWindow::AddObject(ButtonPackage::Button* object)
+void MenuWindow::AddObject(MenuObject* object)
 {
 	objects->Push(object);
 }

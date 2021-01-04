@@ -12,7 +12,7 @@ public:
 	~MenuWindow();
 
 	//void CheckHover(Cursor* cursor);
-	void AddObject(ButtonPackage::Button* object);
+	void AddObject(MenuObject* object);
 	void Render();
 	void HandleLeftMousePressed();
 	void HandleLeftMouseReleased();

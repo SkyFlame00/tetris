@@ -161,6 +161,7 @@
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="ScoreBox.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TetrisGrid.cpp" />
     <ClCompile Include="Tetromino.cpp" />
     <ClCompile Include="FontLoader.cpp" />
@@ -183,17 +184,19 @@
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="ScoreBox.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="TetrisGrid.h" />
     <ClInclude Include="Tetromino.h" />
     <ClInclude Include="FontLoader.h" />
     <ClInclude Include="TextRenderer.h" />
+    <ClInclude Include="vendor\stb_image.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.frag" />
-    <None Include="shader.vert" />
     <None Include="shaders\rect.frag.glsl" />
     <None Include="shaders\rect.vert.glsl" />
+    <None Include="shaders\sprite.frag.glsl" />
+    <None Include="shaders\sprite.vert.glsl" />
     <None Include="shaders\test.frag.glsl" />
     <None Include="shaders\test.vert.glsl" />
     <None Include="shaders\text.frag.glsl" />

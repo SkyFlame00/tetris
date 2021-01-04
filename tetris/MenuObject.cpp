@@ -14,8 +14,8 @@ MenuObject::MenuObject(Matrix* projection, Shader *shader, float originX, float 
 	  height(height)
 {
 	model.matrix = glm::mat4(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f, originX,
+		0.0f, 1.0f, 0.0f, originY,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
@@ -24,14 +24,6 @@ MenuObject::MenuObject(Matrix* projection, Shader *shader, float originX, float 
 	if (model.loc == -1)
 	{
 		std::cout << "ERROR::MENU_OBJECT::CONSTRUCTOR: Location of model matrix cannot be found." << std::endl;
-	}
-
-	pressed.val = false;
-	pressed.loc = glGetUniformLocation(shader->ID, "pressed");
-
-	if (pressed.loc == -1)
-	{
-		std::cout << "ERROR::MENU_OBJECT::CONSTRUCTOR: Location of 'pressed' uniform cannot be found." << std::endl;
 	}
 }
 

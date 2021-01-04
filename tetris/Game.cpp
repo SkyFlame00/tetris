@@ -10,8 +10,6 @@ Game::Game(GLFWwindow* window, int xunits, int yunits)
 	/* Associate GLFW window user pointer with the game object being created */
 	glfwSetWindowUserPointer(window, this);
 
-	/* Register callbacks */
-
 	/* Set projection matrix */
 	SetProjection(xunits, yunits);
 
@@ -26,6 +24,9 @@ Game::Game(GLFWwindow* window, int xunits, int yunits)
 Game::~Game()
 {
 	delete projection.matrix;
+	delete spriteShader;
+	delete logo;
+	delete spriteProjection;
 	/* DELETE THE STACK OF THE MENU WINDOWS */
 }
 
@@ -69,8 +70,6 @@ void Game::Menu()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	window->Render();
-	//textRenderer->Render("1Hello world asd ksa[dk osakd opkao pdkasop kopask do", 50.0f, 50.0f, 1.0f, glm::vec3(0.5f, 0.0f, 1.0f));
-	
 }
 
 MenuWindow* Game::GetTopWindow()
@@ -85,8 +84,6 @@ void Game::InitMainMenu()
 	menuWindows.val = window;
 	menuWindows.prev = nullptr;
 
-	/* Create cursor */
-
 	/* Create and add menu objects */
 	using namespace ButtonPackage;
 	s_AppearanceSettings aSettings;
@@ -98,33 +95,52 @@ void Game::InitMainMenu()
 	aSettings.colorPressed = glm::vec3(0.0f, 0.2f, 0.8f);
 	s_TextSettings tSettings;
 	tSettings.size = 24;
-	tSettings.text = (char*)"Press me";
+	tSettings.text = (char*)"Play";
 	tSettings.color = glm::vec3(0.0f, 0.0f, 0.3f);
 	tSettings.colorPressed = glm::vec3(1.0f, 0.0f, 0.3f);
 
 	Button* startGameBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
-	tSettings.text = (char*)"shit";
-	Button* btn2 = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
-	tSettings.text = (char*)"OH MY FUCKING GOD";
-	Button* btn3 = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
-	startGameBtn->OnClick([](void *data) -> void
+	startGameBtn->OnClick([](void* data) -> void
 		{
 			Game* game = (Game*)data;
 			game->SetState(State::START_GAME);
 		}
 	);
 	window->AddObject(startGameBtn);
-	window->AddObject(btn2);
-	window->AddObject(btn3);
+
+	tSettings.text = (char*)"Score board";
+	Button* scoreboardBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
+	window->AddObject(scoreboardBtn);
+
+	tSettings.text = (char*)"Settings";
+	Button* settingsBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
+	window->AddObject(settingsBtn);
+
+	tSettings.text = (char*)"Quit";
+	Button* quitBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
+	window->AddObject(quitBtn);
+
+	/* Logo */
+	spriteShader = new Shader("shaders/sprite.vert.glsl", "shaders/sprite.frag.glsl"); // not forget to remove it later
+	spriteProjection = new Matrix{
+		glGetUniformLocation(spriteShader->ID, "projection"),
+		projection.matrix
+	};
+	logo = new Sprite(spriteProjection, spriteShader, 100.0f, 100.0f, 200.0f, 100.0f, (char*)"textures/wall.jpg");
+	window->AddObject(logo);
 
 	/* Layout container */
 	LayoutContainer* layoutContainer = new LayoutContainer;
-	LayoutElement* el1 = new LayoutElement(startGameBtn, 0, 0, 0, 20);
-	LayoutElement* el2 = new LayoutElement(btn2, 0, 0, 0, 0);
-	LayoutElement* el3 = new LayoutElement(btn3, 0, 0, 150, 0);
-	layoutContainer->AddElement(el1);
-	layoutContainer->AddElement(el2);
-	layoutContainer->AddElement(el3);
+	LayoutElement* logoEl = new LayoutElement(logo, 0, 0, 0, 20);
+	LayoutElement* startGameBtnEl = new LayoutElement(startGameBtn, 0, 0, 0, 20);
+	LayoutElement* scoreboardBtnEl = new LayoutElement(scoreboardBtn, 0, 0, 0, 0);
+	LayoutElement* settingsBtnEl = new LayoutElement(settingsBtn, 0, 0, 20, 0);
+	LayoutElement* quitBtnEl = new LayoutElement(quitBtn, 0, 0, 20, 0);
+	layoutContainer->AddElement(logoEl);
+	layoutContainer->AddElement(startGameBtnEl);
+	layoutContainer->AddElement(scoreboardBtnEl);
+	layoutContainer->AddElement(settingsBtnEl);
+	layoutContainer->AddElement(quitBtnEl);
 	layoutContainer->SetOffsetX(xunits / 2 - layoutContainer->GetWidth() / 2);
 	layoutContainer->SetOffsetY(yunits / 2 - layoutContainer->GetHeight() / 2);
 }

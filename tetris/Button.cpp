@@ -46,6 +46,15 @@ ButtonPackage::Button::Button(Matrix* projection, Shader* shader, TextRenderer* 
 
 	textColor = tSettings->color;
 	textColorPressed = tSettings->colorPressed;
+
+	/* Pressed */
+	pressed.val = false;
+	pressed.loc = glGetUniformLocation(shader->ID, "pressed");
+
+	if (pressed.loc == -1)
+	{
+		std::cout << "ERROR::MENU_OBJECT::CONSTRUCTOR: Location of 'pressed' uniform cannot be found." << std::endl;
+	}
 }
 
 void ButtonPackage::Button::SetOriginX(int x)

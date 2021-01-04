@@ -46,6 +46,10 @@ namespace ButtonPackage
 		char* text;
 		int textX, textY, textWidth, textHeight;
 		glm::vec3 textColor, textColorPressed;
+		struct {
+			int loc;
+			bool val;
+		} pressed;
 	};
 }
 

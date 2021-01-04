@@ -7,7 +7,7 @@
 
 struct Matrix
 {
-	GLuint loc;
+	int loc;
 	glm::mat4 *matrix;
 };
 

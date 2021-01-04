@@ -18,6 +18,7 @@
 #include "LayoutElement.h"
 #include "LayoutContainer.h"
 #include "Button.h"
+#include "Sprite.h"
 
 typedef void (*WindowCallback)(GLFWwindow* window);
 
@@ -57,22 +58,19 @@ public:
 private:
 	int xunits, yunits;
 	StackItem menuWindows;
-	//Cursor cursor;
 	List<void (*)(GLFWwindow*)> windowCallbacks;
 	Matrix projection;
 	Playground* playground;
 	TextRenderer* textRenderer;
+	Sprite* logo;
+	Shader* spriteShader;
+	Matrix* spriteProjection;
 
 	void Menu();
 	void InitMainMenu();
 	MenuWindow* GetTopWindow();
 	void SetProjection(int xunits, int yunits);
 	void Play();
-
-	/* Callbacks to register */
-	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void LeftMousePressed(GLFWwindow* window, int button, int action, int mods);
-	static void SetMouseCoordinates(GLFWwindow* window, double xpos, double ypos);
 };
 
 #endif
