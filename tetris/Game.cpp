@@ -135,8 +135,8 @@ void Game::InitMainMenu()
 	/* Layout container */
 	LayoutContainer* layoutContainer = new LayoutContainer;
 	LayoutElement* logoEl = new LayoutElement(logo, 0, 0, 0, 20);
-	LayoutElement* startGameBtnEl = new LayoutElement(startGameBtn, 0, 0, 0, 20);
-	LayoutElement* scoreboardBtnEl = new LayoutElement(scoreboardBtn, 0, 0, 0, 0);
+	LayoutElement* startGameBtnEl = new LayoutElement(startGameBtn, 0, 0, 0, 0);
+	LayoutElement* scoreboardBtnEl = new LayoutElement(scoreboardBtn, 0, 0, 20, 0);
 	LayoutElement* settingsBtnEl = new LayoutElement(settingsBtn, 0, 0, 20, 0);
 	LayoutElement* quitBtnEl = new LayoutElement(quitBtn, 0, 0, 20, 0);
 	layoutContainer->AddElement(logoEl);
@@ -144,8 +144,8 @@ void Game::InitMainMenu()
 	layoutContainer->AddElement(scoreboardBtnEl);
 	layoutContainer->AddElement(settingsBtnEl);
 	layoutContainer->AddElement(quitBtnEl);
-	layoutContainer->SetOffsetX(xunits / 2 - layoutContainer->GetWidth() / 2);
-	layoutContainer->SetOffsetY(yunits / 2 - layoutContainer->GetHeight() / 2);
+	layoutContainer->SetOriginX(xunits / 2 - layoutContainer->GetWidth() / 2);
+	layoutContainer->SetOriginY(yunits / 2 - layoutContainer->GetHeight() / 2);
 	layoutContainer->SetAlignment(e_Alignment::CENTER);
 }
 

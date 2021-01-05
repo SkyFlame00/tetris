@@ -1,12 +1,12 @@
 #include "LayoutElement.h"
 
 LayoutElement::LayoutElement(MenuObject* elem, int mLeft, int mRight, int mTop, int mBottom)
-	: elem(elem),
-	  marginLeft(mLeft),
-	  marginRight(mRight),
-	  marginTop(mTop),
-	  marginBottom(mBottom)
+	: elem(elem)
 {
+	marginLeft = mLeft;
+	marginRight = mRight;
+	marginTop = mTop;
+	marginBottom = mBottom;
 }
 
 int LayoutElement::GetWidth()
@@ -37,9 +37,4 @@ int LayoutElement::GetOriginX()
 int LayoutElement::GetOriginY()
 {
 	return elem->GetOriginY();
-}
-
-void LayoutElement::Render()
-{
-	elem->Render();
 }

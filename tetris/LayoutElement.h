@@ -2,8 +2,9 @@
 #define LAYOUT_ELEMENT_H
 
 #include "MenuObject.h"
+#include "LayoutEntity.h"
 
-class LayoutElement
+class LayoutElement : public LayoutEntity
 {
 public:
 	LayoutElement(MenuObject* elem, int mLeft, int mRight, int mTop, int mBottom);
@@ -11,14 +12,12 @@ public:
 
 	int GetWidth();
 	int GetHeight();
-	void Render();
 	void SetOriginX(int originX);
 	void SetOriginY(int originY);
 	int GetOriginX();
 	int GetOriginY();
 
 	MenuObject* elem;
-	int marginLeft, marginRight, marginTop, marginBottom;
 private:
 };
 

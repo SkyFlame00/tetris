@@ -6,82 +6,92 @@ LayoutContainer::LayoutContainer()
 {
 }
 
-void LayoutContainer::AddElement(LayoutElement* elem)
+void LayoutContainer::AddElement(LayoutEntity* entity)
 {
-	elements.push_back(elem);
-	elem->SetOriginY(nextY + elem->marginTop);
-	int width = elem->GetWidth();
+	entities.push_back(entity);
+	entity->SetOriginY(nextY + entity->marginTop);
+	int width = entity->GetWidth();
 	maxElemWidth = width > maxElemWidth ? width : maxElemWidth;
 
 	switch (alignment)
 	{
 	case e_Alignment::CENTER:
-		elem->SetOriginX(offsetX + (maxElemWidth / 2) - (elem->GetWidth() / 2));
+		entity->SetOriginX(originX + (maxElemWidth / 2) - (entity->GetWidth() / 2));
 		break;
 	case e_Alignment::RIGHT:
-		elem->SetOriginX(offsetX + maxElemWidth - elem->GetWidth());
+		entity->SetOriginX(originX + maxElemWidth - entity->GetWidth());
 		break;
 	default:
 	case e_Alignment::LEFT:
-		elem->SetOriginX(offsetX);
+		entity->SetOriginX(originX);
 		break;
 	}
 
-	nextY += elem->marginTop + elem->GetHeight() + elem->marginBottom;
+	nextY += entity->marginTop + entity->GetHeight() + entity->marginBottom;
 }
 
 void LayoutContainer::SetAlignment(e_Alignment alignment)
 {
-	std::list<LayoutElement*>::iterator iter;
+	std::list<LayoutEntity*>::iterator iter;
 
 	switch (alignment)
 	{
 	case e_Alignment::CENTER:
-		for (iter = elements.begin(); iter != elements.end(); iter++)
+		for (iter = entities.begin(); iter != entities.end(); iter++)
 		{
-			(*iter)->SetOriginX(offsetX + (maxElemWidth / 2) - ((*iter)->GetWidth() / 2));
+			(*iter)->SetOriginX(originX + (maxElemWidth / 2) - ((*iter)->GetWidth() / 2));
 		}
 		break;
 	case e_Alignment::RIGHT:
-		for (iter = elements.begin(); iter != elements.end(); iter++)
+		for (iter = entities.begin(); iter != entities.end(); iter++)
 		{
-			(*iter)->SetOriginX(offsetX + maxElemWidth - (*iter)->GetWidth());
+			(*iter)->SetOriginX(originX + maxElemWidth - (*iter)->GetWidth());
 		}
 		break;
 	default:
 	case e_Alignment::LEFT:
-		for (iter = elements.begin(); iter != elements.end(); iter++)
+		for (iter = entities.begin(); iter != entities.end(); iter++)
 		{
-			(*iter)->SetOriginX(offsetX);
+			(*iter)->SetOriginX(originX);
 		}
 		break;
 	}
 }
 
-void LayoutContainer::SetOffsetX(int offsetX)
+int LayoutContainer::GetOriginX()
 {
-	int diff = offsetX - this->offsetX;
-	std::list<LayoutElement*>::iterator iter;
-	for (iter = elements.begin(); iter != elements.end(); iter++)
-	{
-		auto elem = (*iter);
-		elem->SetOriginX(elem->GetOriginX() + diff);
-	}
-
-	this->offsetX = offsetX;
+	return originX;
 }
 
-void LayoutContainer::SetOffsetY(int offsetY)
+int LayoutContainer::GetOriginY()
 {
-	int diff = offsetY - this->offsetY;
-	std::list<LayoutElement*>::iterator iter;
-	for (iter = elements.begin(); iter != elements.end(); iter++)
+	return originY;
+}
+
+void LayoutContainer::SetOriginX(int originX)
+{
+	int diff = originX - this->originX;
+	std::list<LayoutEntity*>::iterator iter;
+	for (iter = entities.begin(); iter != entities.end(); iter++)
 	{
-		auto elem = (*iter);
-		elem->SetOriginY(elem->GetOriginY() + diff);
+		auto entity = (*iter);
+		entity->SetOriginX(entity->GetOriginX() + diff);
 	}
 
-	this->offsetY = offsetY;
+	this->originX = originX;
+}
+
+void LayoutContainer::SetOriginY(int originY)
+{
+	int diff = originY - this->originY;
+	std::list<LayoutEntity*>::iterator iter;
+	for (iter = entities.begin(); iter != entities.end(); iter++)
+	{
+		auto entity = (*iter);
+		entity->SetOriginY(entity->GetOriginY() + diff);
+	}
+
+	this->originY = originY;
 }
 
 int LayoutContainer::GetWidth()
@@ -91,27 +101,14 @@ int LayoutContainer::GetWidth()
 
 int LayoutContainer::GetHeight()
 {
-	std::list<LayoutElement*>::iterator iter;
+	std::list<LayoutEntity*>::iterator iter;
 	int y = 0;
 
-	for (iter = elements.begin(); iter != elements.end(); iter++)
+	for (iter = entities.begin(); iter != entities.end(); iter++)
 	{
-		auto elem = *iter;
-		y += elem->marginTop + elem->GetHeight() + elem->marginBottom;
+		auto entity = *iter;
+		y += entity->marginTop + entity->GetHeight() + entity->marginBottom;
 	}
 
 	return y;
-}
-
-void LayoutContainer::Render()
-{
-	std::list<LayoutElement*>::iterator iter;
-	int y = offsetY;
-
-	for (iter = elements.begin(); iter != elements.end(); iter++)
-	{
-		auto elem = *iter;
-		elem->Render();
-		y += elem->marginTop + elem->GetHeight() + elem->marginBottom;
-	}
 }

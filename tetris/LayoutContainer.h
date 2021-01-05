@@ -4,6 +4,7 @@
 #include "LayoutElement.h"
 #include "MenuObject.h"
 #include <list>
+#include "LayoutEntity.h"
 
 enum class e_Alignment
 {
@@ -12,24 +13,26 @@ enum class e_Alignment
 	RIGHT
 };
 
-class LayoutContainer
+class LayoutContainer : public LayoutEntity
 {
 public:
 	LayoutContainer();
 	~LayoutContainer();
 
-	void AddElement(LayoutElement* elem);
+	void AddElement(LayoutEntity* entity);
 	void SetAlignment(e_Alignment alignment);
 	int GetWidth();
 	int GetHeight();
-	void SetOffsetX(int offsetX);
-	void SetOffsetY(int offsetY);
-	void Render();
+	int GetOriginX();
+	int GetOriginY();
+	void SetOriginX(int originX);
+	void SetOriginY(int originY);
 
 	e_Alignment alignment;
+	int marginLeft, marginRight, marginTop, marginBottom;
 private:
-	int offsetX, offsetY, nextY, maxElemWidth;
-	std::list<LayoutElement*> elements;
+	int originX, originY, nextY, maxElemWidth;
+	std::list<LayoutEntity*> entities;
 	MenuObject* capturedObject;
 };
 
