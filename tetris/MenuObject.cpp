@@ -3,6 +3,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "helpers/MatrixTool.h"
 
+MenuObject::MenuObject(float originX, float originY)
+	: originX(originX),
+	  originY(originY)
+{
+}
+
 MenuObject::MenuObject(Matrix* projection, Shader *shader, float originX, float originY, int width, int height)
 	: shader(shader),
 	  VAO(0),

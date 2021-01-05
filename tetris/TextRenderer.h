@@ -20,7 +20,7 @@ public:
 	void Render(std::string text, float x, float y, float scale, glm::vec3 color);
 	void GetMeasurements(std::string text, int* textWidth, int* textHeight);
 
-	int baselineShift;
+	int baselineShift, referenceSize, maxAscent, maxDescent;
 private:
 	glm::mat4* projection;
 	GLuint VAO, VBO;

@@ -13,7 +13,6 @@
 class FontLoader
 {
 public:
-	static int Init();
 	static TextRenderer* Load(glm::mat4* projection, char* fontPath, int width, int height);
 	static FT_Library ft;
 private:

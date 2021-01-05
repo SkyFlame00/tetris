@@ -10,6 +10,7 @@
 class MenuObject
 {
 public:
+	MenuObject(float originX, float originY);
 	MenuObject(Matrix* projection, Shader *shader, float originX, float originY, int width, int height);
 
 	virtual bool OverlapsPoint(float x, float y) = 0;

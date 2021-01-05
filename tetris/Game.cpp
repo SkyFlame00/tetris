@@ -16,7 +16,6 @@ Game::Game(GLFWwindow* window, int xunits, int yunits)
 	SetProjection(xunits, yunits);
 
 	/* Init font loader */
-	FontLoader::Init();
 	textRenderer = FontLoader::Load(projection.matrix, (char*)"fonts/arial.ttf", 0, 24);
 
 	/* Initialize main menu */
@@ -58,19 +57,12 @@ void Game::Menu()
 	menuController.Render();
 }
 
-MenuWindow* Game::GetTopWindow()
-{
-	return menuWindows.val;
-}
-
 void Game::InitMainMenu()
 {
 	/* Create menu window */
 	MainMenuWindow* window = new MainMenuWindow(appWindow);
 	menuController.AddWindow(window, "main_menu");
 	menuController.Open("main_menu");
-	//menuWindows.val = window;
-	//menuWindows.prev = nullptr;
 
 	/* Create and add menu objects */
 	using namespace ButtonPackage;
@@ -148,6 +140,20 @@ void Game::InitSettings()
 {
 	SettingsWindow* window = new SettingsWindow(&menuController);
 	menuController.AddWindow(window, "settings");
+
+	textRenderer_72 = textRenderer = FontLoader::Load(projection.matrix, (char*)"fonts/calibri.ttf", 0, 54);
+	PlainText* settingsTitle = new PlainText(textRenderer, "Settings", glm::vec3(0.0f, 0.0f, 0.0f));
+
+	window->AddObject(settingsTitle);
+
+	/* Layout */
+	using namespace Layout;
+	LayoutContainer* layoutContainer = new LayoutContainer;
+	LayoutElement* settingsTitleEl = new LayoutElement(settingsTitle, 0, 0, 0, 0);
+	layoutContainer->AddElement(settingsTitleEl);
+	layoutContainer->SetOriginX(xunits / 2 - layoutContainer->GetWidth() / 2);
+	layoutContainer->SetOriginY(textRenderer_72->maxAscent + 40.0f);
+	layoutContainer->SetAlignment(e_Alignment::CENTER);
 }
 
 void Game::SetProjection(int xunits, int yunits)

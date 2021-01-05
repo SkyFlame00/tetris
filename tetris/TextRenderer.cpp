@@ -3,7 +3,9 @@
 TextRenderer::TextRenderer(glm::mat4* projection, Shader* shader, std::map<char, Character>* charset)
     : shader(shader),
       projection(projection),
-      charset(charset)
+      charset(charset),
+	  maxAscent(0),
+	  maxDescent(0)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -17,7 +19,6 @@ TextRenderer::TextRenderer(glm::mat4* projection, Shader* shader, std::map<char,
 
 	/* Calculate some metrics */
 	maxHeight = 0;
-	int maxAscent = 0, maxDescent = 0;
 	for (unsigned int c = 0; c < 128; c++)
 	{
 		Character ch = (*charset)[c];
@@ -66,7 +67,6 @@ void TextRenderer::GetMeasurements(std::string text, int* textWidth, int* textHe
 
 void TextRenderer::Render(std::string text, float x, float y, float scale, glm::vec3 color)
 {
-	// activate corresponding render state
 	shader->use();
 
 	glUniform3f(glGetUniformLocation(shader->ID, "textColor"), color.x, color.y, color.z);

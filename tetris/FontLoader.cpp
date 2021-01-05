@@ -2,20 +2,16 @@
 
 FT_Library FontLoader::ft;
 
-int FontLoader::Init()
+TextRenderer* FontLoader::Load(glm::mat4* projection, char* fontPath, int width, int height)
 {
 	// All functions return a value different than 0 whenever an error occurred
+	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
 	{
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-		return -1;
+		return nullptr;
 	}
 
-	return 0;
-}
-
-TextRenderer* FontLoader::Load(glm::mat4* projection, char* fontPath, int width, int height)
-{
 	// load font as face
 	FT_Face face;
 	if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face)) {

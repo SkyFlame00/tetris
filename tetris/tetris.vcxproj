@@ -160,6 +160,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuObject.cpp" />
     <ClCompile Include="NextTetrominosWindow.cpp" />
+    <ClCompile Include="PlainText.cpp" />
     <ClCompile Include="Playground.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="ScoreBox.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="MenuWindow.h" />
     <ClInclude Include="MenuObject.h" />
     <ClInclude Include="NextTetrominosWindow.h" />
+    <ClInclude Include="PlainText.h" />
     <ClInclude Include="Playground.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="ScoreBox.h" />

@@ -13,7 +13,8 @@ ButtonPackage::Button::Button(Matrix* projection, Shader* shader, TextRenderer* 
 	    (float)aSettings->width, 0                       , 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
       },
 	  textRenderer(textRenderer),
-	  hasBorder(false)
+	  hasBorder(false),
+	  textSize(tSettings->size)
 {
 	float borderWidth = 0.0f;
 	float width = (float)aSettings->width;

@@ -58,6 +58,7 @@ namespace ButtonPackage
 		bool hasBorder;
 		GLuint borderVAO, borderVBO;
 		float* borderVertices;
+		int textSize;
 	};
 }
 
