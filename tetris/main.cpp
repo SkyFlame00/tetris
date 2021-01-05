@@ -82,9 +82,9 @@ void keyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	UserInput* userInput = static_cast<UserInput*>(glfwGetWindowUserPointer(window));
 
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	if (key == GLFW_KEY_ESCAPE)
 	{
-		glfwSetWindowShouldClose(window, true);
+		userInput->escPressed = action == GLFW_PRESS;
 	}
 	
 	if (key == GLFW_KEY_LEFT)
@@ -148,6 +148,7 @@ void resetUserInput(UserInput* userInput)
 	userInput->downArrowReleased = false;
 	userInput->spacePressed = false;
 	userInput->spaceReleased = false;
+	userInput->escPressed = false;
 }
 
 void cleanup()

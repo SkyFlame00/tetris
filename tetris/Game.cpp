@@ -5,7 +5,9 @@ Game::Game(GLFWwindow* window, int xunits, int yunits)
 	  xunits(xunits),
 	  yunits(yunits),
 	  menuWindows{},
-	  shader("shader.vert", "shader.frag")
+	  shader("shader.vert", "shader.frag"),
+	  menuController(),
+	  appWindow(window)
 {
 	/* Associate GLFW window user pointer with the game object being created */
 	glfwSetWindowUserPointer(window, this);
@@ -19,6 +21,7 @@ Game::Game(GLFWwindow* window, int xunits, int yunits)
 
 	/* Initialize main menu */
 	InitMainMenu();
+	InitSettings();
 }
 
 Game::~Game()
@@ -27,7 +30,7 @@ Game::~Game()
 	delete spriteShader;
 	delete logo;
 	delete spriteProjection;
-	/* DELETE THE STACK OF THE MENU WINDOWS */
+	/* TODO: DELETE THE MAP OF THE MENU WINDOWS */
 }
 
 void Game::Render()
@@ -52,24 +55,7 @@ void Game::Render()
 
 void Game::Menu()
 {
-	MenuWindow* window = GetTopWindow();
-
-	window->SetMouseX(mouseX);
-	window->SetMouseY(mouseY);
-
-	if (mousePressed)
-	{
-		window->HandleLeftMousePressed();
-	}
-
-	if (mouseReleased)
-	{
-		window->HandleLeftMouseReleased();
-	}
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	window->Render();
+	menuController.Render();
 }
 
 MenuWindow* Game::GetTopWindow()
@@ -80,9 +66,11 @@ MenuWindow* Game::GetTopWindow()
 void Game::InitMainMenu()
 {
 	/* Create menu window */
-	MenuWindow* window = new MenuWindow;
-	menuWindows.val = window;
-	menuWindows.prev = nullptr;
+	MainMenuWindow* window = new MainMenuWindow(appWindow);
+	menuController.AddWindow(window, "main_menu");
+	menuController.Open("main_menu");
+	//menuWindows.val = window;
+	//menuWindows.prev = nullptr;
 
 	/* Create and add menu objects */
 	using namespace ButtonPackage;
@@ -117,6 +105,12 @@ void Game::InitMainMenu()
 
 	tSettings.text = (char*)"Settings";
 	Button* settingsBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, &bSettings, (void*)this);
+	settingsBtn->OnClick([](void* data) -> void
+		{
+			Game* game = static_cast<Game*>(data);
+			game->menuController.Open("settings");
+		}
+	);
 	window->AddObject(settingsBtn);
 
 	tSettings.text = (char*)"Quit";
@@ -148,6 +142,12 @@ void Game::InitMainMenu()
 	layoutContainer->SetOriginX(xunits / 2 - layoutContainer->GetWidth() / 2);
 	layoutContainer->SetOriginY(yunits / 2 - layoutContainer->GetHeight() / 2);
 	layoutContainer->SetAlignment(e_Alignment::CENTER);
+}
+
+void Game::InitSettings()
+{
+	SettingsWindow* window = new SettingsWindow(&menuController);
+	menuController.AddWindow(window, "settings");
 }
 
 void Game::SetProjection(int xunits, int yunits)
@@ -186,13 +186,19 @@ void Game::Play()
 
 void Game::Update(float deltaTime, UserInput* userInput)
 {
+	MenuControllerPackage::UpdateData data;
+
 	switch (state)
 	{
 	case State::MENU:
-		mouseX = userInput->mouseX;
-		mouseY = userInput->mouseY;
-		mousePressed = userInput->mousePressed;
-		mouseReleased = userInput->mouseReleased;
+		data = {
+			userInput->mouseX,
+			userInput->mouseY,
+			userInput->mousePressed,
+			userInput->mouseReleased,
+			userInput->escPressed
+		};
+		menuController.Update(&data);
 		break;
 	case State::PLAYING:
 		playground->Update(deltaTime, userInput);

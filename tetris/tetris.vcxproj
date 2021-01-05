@@ -153,6 +153,8 @@
     <ClCompile Include="LayoutContainer.cpp" />
     <ClCompile Include="LayoutElement.cpp" />
     <ClCompile Include="LayoutEntity.cpp" />
+    <ClCompile Include="MainMenuWindow.cpp" />
+    <ClCompile Include="MenuController.cpp" />
     <ClCompile Include="MenuWindow.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
@@ -161,6 +163,7 @@
     <ClCompile Include="Playground.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="ScoreBox.cpp" />
+    <ClCompile Include="SettingsWindow.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TetrisGrid.cpp" />
@@ -179,12 +182,15 @@
     <ClInclude Include="LayoutContainer.h" />
     <ClInclude Include="LayoutElement.h" />
     <ClInclude Include="LayoutEntity.h" />
+    <ClInclude Include="MainMenuWindow.h" />
+    <ClInclude Include="MenuController.h" />
     <ClInclude Include="MenuWindow.h" />
     <ClInclude Include="MenuObject.h" />
     <ClInclude Include="NextTetrominosWindow.h" />
     <ClInclude Include="Playground.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="ScoreBox.h" />
+    <ClInclude Include="SettingsWindow.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TetrisGrid.h" />

@@ -14,10 +14,11 @@ public:
 	//void CheckHover(Cursor* cursor);
 	void AddObject(MenuObject* object);
 	void Render();
-	void HandleLeftMousePressed();
-	void HandleLeftMouseReleased();
 	void SetMouseX(double newX);
 	void SetMouseY(double newY);
+	void HandleLeftMousePressed();
+	void HandleLeftMouseReleased();
+	virtual void HandleEscPressed();
 
 	double mouseX;
 	double mouseY;

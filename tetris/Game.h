@@ -19,6 +19,9 @@
 #include "LayoutContainer.h"
 #include "Button.h"
 #include "Sprite.h"
+#include "MenuController.h"
+#include "MainMenuWindow.h"
+#include "SettingsWindow.h"
 
 typedef void (*WindowCallback)(GLFWwindow* window);
 
@@ -43,8 +46,6 @@ public:
 	~Game();
 
 	void Render();
-	void RegisterWindowCallback(WindowCallback window);
-	void ProcessUserInput(GLFWwindow *window);
 	void StartGame();
 	void SetState(State state);
 	void Update(float deltaTime, UserInput* userInput);
@@ -55,6 +56,7 @@ public:
 	double mouseY;
 	bool mousePressed;
 	bool mouseReleased;
+	MenuControllerPackage::MenuController menuController;
 private:
 	int xunits, yunits;
 	StackItem menuWindows;
@@ -65,9 +67,11 @@ private:
 	Sprite* logo;
 	Shader* spriteShader;
 	Matrix* spriteProjection;
+	GLFWwindow* appWindow;
 
 	void Menu();
 	void InitMainMenu();
+	void InitSettings();
 	MenuWindow* GetTopWindow();
 	void SetProjection(int xunits, int yunits);
 	void Play();

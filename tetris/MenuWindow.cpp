@@ -69,6 +69,10 @@ void MenuWindow::HandleLeftMouseReleased()
 	capturedObject = nullptr;
 }
 
+void MenuWindow::HandleEscPressed()
+{
+}
+
 void MenuWindow::SetMouseX(double newX)
 {
 	xdt = newX - mouseX;
