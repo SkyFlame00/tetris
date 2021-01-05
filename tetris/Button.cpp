@@ -1,6 +1,6 @@
 #include "Button.h"
 
-ButtonPackage::Button::Button(Matrix* projection, Shader* shader, TextRenderer* textRenderer, s_AppearanceSettings* aSettings, s_TextSettings* tSettings, void* eventData)
+ButtonPackage::Button::Button(Matrix* projection, Shader* shader, TextRenderer* textRenderer, s_AppearanceSettings* aSettings, s_TextSettings* tSettings, s_BorderSettings* bSettings, void* eventData)
 	: MenuObject(projection, shader, aSettings->xpos, aSettings->ypos, aSettings->width, aSettings->height),
 	  eventData(eventData),
 	  vertices{
@@ -12,8 +12,78 @@ ButtonPackage::Button::Button(Matrix* projection, Shader* shader, TextRenderer* 
 	    (float)aSettings->width, (float)aSettings->height, 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
 	    (float)aSettings->width, 0                       , 0.0f, aSettings->color.x, aSettings->color.y, aSettings->color.z,
       },
-	  textRenderer(textRenderer)
+	  textRenderer(textRenderer),
+	  hasBorder(false)
 {
+	float borderWidth = 0.0f;
+	float width = (float)aSettings->width;
+	float height = (float)aSettings->height;
+
+	/* Border */
+	if (bSettings)
+	{
+		hasBorder = true;
+		borderWidth = (float)bSettings->thickness;
+		this->width += 2 * borderWidth;
+		this->height += 2 * borderWidth;
+
+		for (int i = 0; i < 6; i++)
+		{
+			vertices[i * 6] += borderWidth;
+			vertices[i * 6 + 1] += borderWidth;
+		}
+
+		borderVertices = new float[]{
+			// Top rect
+			0.0f                   , 0.0f                    , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, 0.0f                    , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			0.0f                   , borderWidth             , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, 0.0f                    , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			0.0f                   , borderWidth             , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, borderWidth             , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+
+			// Bottom rect
+			0.0f                   , borderWidth + height    , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			0.0f                   , 2 * borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, borderWidth + height    , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			0.0f                   , 2 * borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, borderWidth + height    , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, 2 * borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+
+			// Left rect
+			0.0f                   , borderWidth         , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			0.0f                   , borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			borderWidth            , borderWidth         , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			0.0f                   , borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			borderWidth            , borderWidth         , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			borderWidth            , borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+
+			// Right rect
+			borderWidth + width    , borderWidth         , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			borderWidth + width    , borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, borderWidth         , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			borderWidth + width    , borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, borderWidth         , 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+			2 * borderWidth + width, borderWidth + height, 0.0f, bSettings->color.x, bSettings->color.y, bSettings->color.z,
+		};
+
+		glGenVertexArrays(1, &borderVAO);
+		glGenBuffers(1, &borderVBO);
+
+		glBindVertexArray(borderVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, borderVBO);
+
+		glBufferData(GL_ARRAY_BUFFER, 36 * 4 * sizeof(float), borderVertices, GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+
 	/* Generate vertices */
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -84,6 +154,13 @@ void ButtonPackage::Button::Render()
 	glUniformMatrix4fv(model.loc, 1, GL_TRUE, glm::value_ptr(modelMatrix));
 	glUniform1i(pressed.loc, pressed.val);
 	glDrawArrays(GL_TRIANGLES, 0, VERTICES_NUM);
+	glBindVertexArray(0);
+
+	glBindVertexArray(borderVAO);
+	glUniformMatrix4fv(projection->loc, 1, GL_TRUE, glm::value_ptr(*projection->matrix));
+	glUniformMatrix4fv(model.loc, 1, GL_TRUE, glm::value_ptr(modelMatrix));
+	glUniform1i(pressed.loc, pressed.val);
+	glDrawArrays(GL_TRIANGLES, 0, 24);
 	glBindVertexArray(0);
 
 	textRenderer->Render(text, textX, textY, 1.0f, pressed.val ? textColorPressed : textColor);

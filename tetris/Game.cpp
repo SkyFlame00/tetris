@@ -98,8 +98,11 @@ void Game::InitMainMenu()
 	tSettings.text = (char*)"Play";
 	tSettings.color = glm::vec3(0.0f, 0.0f, 0.3f);
 	tSettings.colorPressed = glm::vec3(1.0f, 0.0f, 0.3f);
+	s_BorderSettings bSettings;
+	bSettings.thickness = 2;
+	bSettings.color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	Button* startGameBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
+	Button* startGameBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, &bSettings,(void*)this);
 	startGameBtn->OnClick([](void* data) -> void
 		{
 			Game* game = (Game*)data;
@@ -109,15 +112,15 @@ void Game::InitMainMenu()
 	window->AddObject(startGameBtn);
 
 	tSettings.text = (char*)"Score board";
-	Button* scoreboardBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
+	Button* scoreboardBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, &bSettings, (void*)this);
 	window->AddObject(scoreboardBtn);
 
 	tSettings.text = (char*)"Settings";
-	Button* settingsBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
+	Button* settingsBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, &bSettings, (void*)this);
 	window->AddObject(settingsBtn);
 
 	tSettings.text = (char*)"Quit";
-	Button* quitBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, (void*)this);
+	Button* quitBtn = new Button(&projection, &shader, textRenderer, &aSettings, &tSettings, &bSettings, (void*)this);
 	window->AddObject(quitBtn);
 
 	/* Logo */
@@ -126,7 +129,7 @@ void Game::InitMainMenu()
 		glGetUniformLocation(spriteShader->ID, "projection"),
 		projection.matrix
 	};
-	logo = new Sprite(spriteProjection, spriteShader, 100.0f, 100.0f, 200.0f, 100.0f, (char*)"textures/wall.jpg");
+	logo = new Sprite(spriteProjection, spriteShader, 0.0f, 0.0f, 280.0f, 70.0f, (char*)"textures/logo.png");
 	window->AddObject(logo);
 
 	/* Layout container */
@@ -143,6 +146,7 @@ void Game::InitMainMenu()
 	layoutContainer->AddElement(quitBtnEl);
 	layoutContainer->SetOffsetX(xunits / 2 - layoutContainer->GetWidth() / 2);
 	layoutContainer->SetOffsetY(yunits / 2 - layoutContainer->GetHeight() / 2);
+	layoutContainer->SetAlignment(e_Alignment::CENTER);
 }
 
 void Game::SetProjection(int xunits, int yunits)

@@ -13,14 +13,6 @@ Sprite::Sprite(Matrix* projection, Shader* shader, float originX, float originY,
 		0.0f        , 0.0f         , 0.0f, 1.0f,
 		0.0f        , float(height), 0.0f, 0.0f,
 		(float)width, float(height), 1.0f, 0.0f
-
-		//0.5f,  0.5f,      1.0f, 1.0f, // top right
-		// 0.5f, -0.5f,      1.0f, 0.0f, // bottom right
-		// -0.5f,  0.5f,      0.0f, 1.0f,  // top left 
-
-		// 0.5f, -0.5f,      1.0f, 0.0f, // bottom right
-		//-0.5f, -0.5f,      0.0f, 0.0f, // bottom left
-		//-0.5f,  0.5f,      0.0f, 1.0f  // top left 
 	};
 
 
@@ -52,7 +44,7 @@ Sprite::Sprite(Matrix* projection, Shader* shader, float originX, float originY,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	stbi_image_free(data);
@@ -70,16 +62,15 @@ bool Sprite::OverlapsPoint(float x, float y)
 
 void Sprite::HandleLeftMousePressed()
 {
-
 }
 
 void Sprite::HandleLeftMouseReleased(bool releasedOnObject)
 {
-
 }
 
 void Sprite::Render()
 {
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glm::mat4 modelMatrix = {
 		1.0f, 0.0f, 0.0f, originX,
 		0.0f, 1.0f, 0.0f, originY,
@@ -95,4 +86,5 @@ void Sprite::Render()
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

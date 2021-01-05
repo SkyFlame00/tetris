@@ -19,11 +19,16 @@ namespace ButtonPackage
 		glm::vec3 color, colorPressed;
 	};
 
+	struct s_BorderSettings
+	{
+		unsigned int thickness;
+		glm::vec3 color;
+	};
 
 	class Button : public MenuObject
 	{
 	public:
-		Button(Matrix* projection, Shader* shader, TextRenderer* textRenderer, s_AppearanceSettings* aSettings, s_TextSettings* tSettings, void* eventData);
+		Button(Matrix* projection, Shader* shader, TextRenderer* textRenderer, s_AppearanceSettings* aSettings, s_TextSettings* tSettings, s_BorderSettings* bSettings, void* eventData);
 
 		bool OverlapsPoint(float x, float y);
 		void HandleLeftMousePressed();
@@ -50,6 +55,9 @@ namespace ButtonPackage
 			int loc;
 			bool val;
 		} pressed;
+		bool hasBorder;
+		GLuint borderVAO, borderVBO;
+		float* borderVertices;
 	};
 }
 

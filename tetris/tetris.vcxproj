@@ -193,6 +193,8 @@
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shader.frag" />
+    <None Include="shader.vert" />
     <None Include="shaders\rect.frag.glsl" />
     <None Include="shaders\rect.vert.glsl" />
     <None Include="shaders\sprite.frag.glsl" />
