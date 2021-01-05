@@ -1,33 +1,91 @@
 #include "LayoutContainer.h"
 
+using namespace Layout;
+
 LayoutContainer::LayoutContainer()
-	: nextY(0),
-	  alignment(e_Alignment::LEFT)
+	: LayoutContainer(e_Flow::HORIZONTAL)
+{
+}
+
+LayoutContainer::LayoutContainer(e_Flow flow)
+	: nextX(0),
+	  nextY(0),
+	  alignment(e_Alignment::LEFT),
+	  flow(flow)
+{
+}
+
+LayoutContainer::LayoutContainer(e_Flow flow, int width, int height)
+	: LayoutContainer(flow)
+{
+	if (width > -1)
+	{
+		isWidthFixed = true;
+		isSizeFixed = true;
+		fixedWidth = width;
+	}
+
+	if (height > -1)
+	{
+		isHeightFixed = true;
+		isSizeFixed = true;
+		fixedHeight = height;
+	}
+}
+
+LayoutContainer::LayoutContainer(int width, int height)
+	: LayoutContainer(e_Flow::HORIZONTAL, width, height)
 {
 }
 
 void LayoutContainer::AddElement(LayoutEntity* entity)
 {
 	entities.push_back(entity);
-	entity->SetOriginY(nextY + entity->marginTop);
-	int width = entity->GetWidth();
-	maxElemWidth = width > maxElemWidth ? width : maxElemWidth;
 
-	switch (alignment)
+	if (flow == e_Flow::HORIZONTAL)
 	{
-	case e_Alignment::CENTER:
-		entity->SetOriginX(originX + (maxElemWidth / 2) - (entity->GetWidth() / 2));
-		break;
-	case e_Alignment::RIGHT:
-		entity->SetOriginX(originX + maxElemWidth - entity->GetWidth());
-		break;
-	default:
-	case e_Alignment::LEFT:
-		entity->SetOriginX(originX);
-		break;
-	}
+		entity->SetOriginY(nextY + entity->marginTop);
+		int width = entity->GetWidth();
+		maxElemWidth = width > maxElemWidth ? width : maxElemWidth;
 
-	nextY += entity->marginTop + entity->GetHeight() + entity->marginBottom;
+		switch (alignment)
+		{
+		case e_Alignment::CENTER:
+			entity->SetOriginX(originX + (maxElemWidth / 2) - (entity->GetWidth() / 2));
+			break;
+		case e_Alignment::RIGHT:
+			entity->SetOriginX(originX + maxElemWidth - entity->GetWidth());
+			break;
+		default:
+		case e_Alignment::LEFT:
+			entity->SetOriginX(originX);
+			break;
+		}
+
+		nextY += entity->marginTop + entity->GetHeight() + entity->marginBottom;
+	}
+	else if (flow == e_Flow::VERTICAL)
+	{
+		entity->SetOriginX(nextX + entity->marginLeft);
+		int height = entity->GetHeight();
+		maxElemHeight = height > maxElemHeight ? height : maxElemHeight;
+
+		switch (alignment)
+		{
+		case e_Alignment::CENTER:
+			entity->SetOriginY(originY + (maxElemHeight / 2) - (entity->GetHeight() / 2));
+			break;
+		case e_Alignment::RIGHT:
+			entity->SetOriginY(originY + maxElemHeight - entity->GetHeight());
+			break;
+		default:
+		case e_Alignment::LEFT:
+			entity->SetOriginY(originY);
+			break;
+		}
+
+		nextX += entity->marginLeft + entity->GetHeight() + entity->marginRight;
+	}
 }
 
 void LayoutContainer::SetAlignment(e_Alignment alignment)
@@ -39,20 +97,41 @@ void LayoutContainer::SetAlignment(e_Alignment alignment)
 	case e_Alignment::CENTER:
 		for (iter = entities.begin(); iter != entities.end(); iter++)
 		{
-			(*iter)->SetOriginX(originX + (maxElemWidth / 2) - ((*iter)->GetWidth() / 2));
+			if (flow == e_Flow::HORIZONTAL)
+			{
+				(*iter)->SetOriginX(originX + (maxElemWidth / 2) - ((*iter)->GetWidth() / 2));
+			}
+			else if (flow == e_Flow::VERTICAL)
+			{
+				(*iter)->SetOriginY(originY + (maxElemHeight / 2) - ((*iter)->GetHeight() / 2));
+			}
 		}
 		break;
 	case e_Alignment::RIGHT:
 		for (iter = entities.begin(); iter != entities.end(); iter++)
 		{
-			(*iter)->SetOriginX(originX + maxElemWidth - (*iter)->GetWidth());
+			if (flow == e_Flow::HORIZONTAL)
+			{
+				(*iter)->SetOriginX(originX + maxElemWidth - (*iter)->GetWidth());
+			}
+			else if (flow == e_Flow::VERTICAL)
+			{
+				(*iter)->SetOriginY(originY + maxElemHeight - (*iter)->GetHeight());
+			}
 		}
 		break;
 	default:
 	case e_Alignment::LEFT:
 		for (iter = entities.begin(); iter != entities.end(); iter++)
 		{
-			(*iter)->SetOriginX(originX);
+			if (flow == e_Flow::HORIZONTAL)
+			{
+				(*iter)->SetOriginX(originX);
+			}
+			else if (flow == e_Flow::VERTICAL)
+			{
+				(*iter)->SetOriginY(originY);
+			}
 		}
 		break;
 	}
@@ -96,11 +175,21 @@ void LayoutContainer::SetOriginY(int originY)
 
 int LayoutContainer::GetWidth()
 {
+	if (isWidthFixed)
+	{
+		return fixedWidth;
+	}
+
 	return maxElemWidth;
 }
 
 int LayoutContainer::GetHeight()
 {
+	if (isHeightFixed)
+	{
+		return fixedHeight;
+	}
+
 	std::list<LayoutEntity*>::iterator iter;
 	int y = 0;
 

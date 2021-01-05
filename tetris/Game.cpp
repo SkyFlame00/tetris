@@ -133,6 +133,7 @@ void Game::InitMainMenu()
 	window->AddObject(logo);
 
 	/* Layout container */
+	using namespace Layout;
 	LayoutContainer* layoutContainer = new LayoutContainer;
 	LayoutElement* logoEl = new LayoutElement(logo, 0, 0, 0, 20);
 	LayoutElement* startGameBtnEl = new LayoutElement(startGameBtn, 0, 0, 0, 0);
