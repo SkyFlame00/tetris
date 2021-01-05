@@ -179,8 +179,23 @@ int LayoutContainer::GetWidth()
 	{
 		return fixedWidth;
 	}
+	if (flow == e_Flow::HORIZONTAL)
+	{
+		return maxElemWidth;
+	}
+	else if (flow == e_Flow::VERTICAL)
+	{
+		std::list<LayoutEntity*>::iterator iter;
+		int x = 0;
 
-	return maxElemWidth;
+		for (iter = entities.begin(); iter != entities.end(); iter++)
+		{
+			auto entity = *iter;
+			x += entity->marginLeft + entity->GetWidth() + entity->marginRight;
+		}
+
+		return x;
+	}
 }
 
 int LayoutContainer::GetHeight()
@@ -189,15 +204,21 @@ int LayoutContainer::GetHeight()
 	{
 		return fixedHeight;
 	}
-
-	std::list<LayoutEntity*>::iterator iter;
-	int y = 0;
-
-	for (iter = entities.begin(); iter != entities.end(); iter++)
+	if (flow == e_Flow::HORIZONTAL)
 	{
-		auto entity = *iter;
-		y += entity->marginTop + entity->GetHeight() + entity->marginBottom;
-	}
+		std::list<LayoutEntity*>::iterator iter;
+		int y = 0;
 
-	return y;
+		for (iter = entities.begin(); iter != entities.end(); iter++)
+		{
+			auto entity = *iter;
+			y += entity->marginTop + entity->GetHeight() + entity->marginBottom;
+		}
+
+		return y;
+	}
+	else if (flow == e_Flow::VERTICAL)
+	{
+		return maxElemHeight;
+	}
 }
