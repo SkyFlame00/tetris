@@ -48,19 +48,20 @@ void LayoutContainer::AddElement(LayoutEntity* entity)
 		int width = entity->GetWidth();
 		maxElemWidth = width > maxElemWidth ? width : maxElemWidth;
 
-		switch (alignment)
-		{
-		case e_Alignment::CENTER:
-			entity->SetOriginX(originX + (maxElemWidth / 2) - (entity->GetWidth() / 2));
-			break;
-		case e_Alignment::RIGHT:
-			entity->SetOriginX(originX + maxElemWidth - entity->GetWidth());
-			break;
-		default:
-		case e_Alignment::LEFT:
-			entity->SetOriginX(originX);
-			break;
-		}
+		//switch (alignment)
+		//{
+		//case e_Alignment::CENTER:
+		//	entity->SetOriginX(originX + (maxElemWidth / 2) - (entity->GetWidth() / 2));
+		//	break;
+		//case e_Alignment::RIGHT:
+		//	entity->SetOriginX(originX + maxElemWidth - entity->GetWidth());
+		//	break;
+		//default:
+		//case e_Alignment::LEFT:
+		//	entity->SetOriginX(originX);
+		//	break;
+		//}
+		SetAlignment(alignment);
 
 		nextY += entity->marginTop + entity->GetHeight() + entity->marginBottom;
 	}
@@ -70,26 +71,29 @@ void LayoutContainer::AddElement(LayoutEntity* entity)
 		int height = entity->GetHeight();
 		maxElemHeight = height > maxElemHeight ? height : maxElemHeight;
 
-		switch (alignment)
-		{
-		case e_Alignment::CENTER:
-			entity->SetOriginY(originY + (maxElemHeight / 2) - (entity->GetHeight() / 2));
-			break;
-		case e_Alignment::RIGHT:
-			entity->SetOriginY(originY + maxElemHeight - entity->GetHeight());
-			break;
-		default:
-		case e_Alignment::LEFT:
-			entity->SetOriginY(originY);
-			break;
-		}
+		//switch (alignment)
+		//{
+		//case e_Alignment::CENTER:
+		//	entity->SetOriginY(originY + (maxElemHeight / 2) - (entity->GetHeight() / 2));
+		//	break;
+		//case e_Alignment::RIGHT:
+		//	entity->SetOriginY(originY + maxElemHeight - entity->GetHeight());
+		//	break;
+		//default:
+		//case e_Alignment::LEFT:
+		//	entity->SetOriginY(originY);
+		//	break;
+		//}
+		SetAlignment(alignment);
 
-		nextX += entity->marginLeft + entity->GetHeight() + entity->marginRight;
+		nextX += entity->marginLeft + entity->GetWidth() + entity->marginRight;
 	}
 }
 
 void LayoutContainer::SetAlignment(e_Alignment alignment)
 {
+	this->alignment = alignment;
+
 	std::list<LayoutEntity*>::iterator iter;
 
 	switch (alignment)
@@ -99,11 +103,11 @@ void LayoutContainer::SetAlignment(e_Alignment alignment)
 		{
 			if (flow == e_Flow::HORIZONTAL)
 			{
-				(*iter)->SetOriginX(originX + (maxElemWidth / 2) - ((*iter)->GetWidth() / 2));
+				(*iter)->SetOriginX(originX + (GetWidth() / 2) - ((*iter)->GetWidth() / 2));
 			}
 			else if (flow == e_Flow::VERTICAL)
 			{
-				(*iter)->SetOriginY(originY + (maxElemHeight / 2) - ((*iter)->GetHeight() / 2));
+				(*iter)->SetOriginY(originY + (GetHeight() / 2) - ((*iter)->GetHeight() / 2));
 			}
 		}
 		break;
@@ -112,11 +116,11 @@ void LayoutContainer::SetAlignment(e_Alignment alignment)
 		{
 			if (flow == e_Flow::HORIZONTAL)
 			{
-				(*iter)->SetOriginX(originX + maxElemWidth - (*iter)->GetWidth());
+				(*iter)->SetOriginX(originX + GetWidth() - (*iter)->GetWidth());
 			}
 			else if (flow == e_Flow::VERTICAL)
 			{
-				(*iter)->SetOriginY(originY + maxElemHeight - (*iter)->GetHeight());
+				(*iter)->SetOriginY(originY + GetHeight() - (*iter)->GetHeight());
 			}
 		}
 		break;

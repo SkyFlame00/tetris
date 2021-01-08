@@ -60,11 +60,11 @@ bool Sprite::OverlapsPoint(float x, float y)
 	return false;
 }
 
-void Sprite::HandleLeftMousePressed()
+void Sprite::HandleLeftMousePressed(float x, float y)
 {
 }
 
-void Sprite::HandleLeftMouseReleased(bool releasedOnObject)
+void Sprite::HandleLeftMouseReleased(bool releasedOnObject, float x, float y)
 {
 }
 

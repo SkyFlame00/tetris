@@ -50,6 +50,11 @@ TextRenderer::~TextRenderer()
     delete charset;
 }
 
+int TextRenderer::GetMaxGlyphHeight()
+{
+	return maxHeight;
+}
+
 void TextRenderer::GetMeasurements(std::string text, int* textWidth, int* textHeight)
 {
 	int width = 0;

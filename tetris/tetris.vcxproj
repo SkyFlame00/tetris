@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="data_structures\List.cpp" />
+    <ClCompile Include="Dropdown.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="helpers\MatrixTool.cpp" />
     <ClCompile Include="helpers\misc.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="data_structures\List.h" />
     <ClInclude Include="data_structures\misc.h" />
+    <ClInclude Include="Dropdown.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="helpers\MatrixTool.h" />
     <ClInclude Include="helpers\misc.h" />
@@ -205,6 +207,8 @@
   <ItemGroup>
     <None Include="shader.frag" />
     <None Include="shader.vert" />
+    <None Include="shaders\dropdown.frag.glsl" />
+    <None Include="shaders\dropdown.vert.glsl" />
     <None Include="shaders\rect.frag.glsl" />
     <None Include="shaders\rect.vert.glsl" />
     <None Include="shaders\sprite.frag.glsl" />

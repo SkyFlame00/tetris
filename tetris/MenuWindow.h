@@ -18,6 +18,7 @@ public:
 	void SetMouseY(double newY);
 	void HandleLeftMousePressed();
 	void HandleLeftMouseReleased();
+	void HandleHover();
 	virtual void HandleEscPressed();
 
 	double mouseX;
@@ -26,7 +27,7 @@ public:
 	double ydt;
 private:
 	List<MenuObject*>* objects;
-	MenuObject* capturedObject;
+	MenuObject *pressedObject, *focusedObject, *hoveredObject;
 };
 
 #endif // !GAME_WINDOW_H

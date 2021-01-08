@@ -31,8 +31,8 @@ namespace ButtonPackage
 		Button(Matrix* projection, Shader* shader, TextRenderer* textRenderer, s_AppearanceSettings* aSettings, s_TextSettings* tSettings, s_BorderSettings* bSettings, void* eventData);
 
 		bool OverlapsPoint(float x, float y);
-		void HandleLeftMousePressed();
-		void HandleLeftMouseReleased(bool releasedOnObject);
+		void HandleLeftMousePressed(float x, float y);
+		void HandleLeftMouseReleased(bool releasedOnObject, float x, float y);
 		/* How to reimplement it differently with no void pointers being used? */
 		void OnClick(void (*)(void*));
 		void Click();

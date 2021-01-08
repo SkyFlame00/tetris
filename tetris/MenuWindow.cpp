@@ -7,7 +7,7 @@ MenuWindow::MenuWindow()
 	  mouseY(0),
 	  xdt(0),
 	  ydt(0),
-	  capturedObject(nullptr)
+	  pressedObject(nullptr)
 {
 	objects = new List<MenuObject*>;
 }
@@ -28,14 +28,49 @@ void MenuWindow::Render()
 	}
 }
 
-//void MenuWindow::CheckHover(Cursor* cursor)
-//{
-//
-//}
-
 void MenuWindow::AddObject(MenuObject* object)
 {
 	objects->Push(object);
+}
+
+void MenuWindow::HandleHover()
+{
+	if (objects->length < 1)
+	{
+		return;
+	}
+
+	MenuObject* hoveredObject = nullptr;
+
+	for (auto item = objects->head; item; item = item->next)
+	{
+		MenuObject* object = item->val;
+
+		if (object->OverlapsPoint(mouseX, mouseY))
+		{
+			hoveredObject = object;
+			break;
+		}
+	}
+
+	if (hoveredObject)
+	{
+		if (this->hoveredObject && this->hoveredObject != hoveredObject)
+		{
+			this->hoveredObject->HandleHoverLost();
+		}
+
+		hoveredObject->HandleHover(mouseX, mouseY);
+		this->hoveredObject = hoveredObject;
+	}
+	else
+	{
+		if (this->hoveredObject)
+		{
+			this->hoveredObject->HandleHoverLost();
+			this->hoveredObject = nullptr;
+		}
+	}
 }
 
 void MenuWindow::HandleLeftMousePressed()
@@ -51,22 +86,29 @@ void MenuWindow::HandleLeftMousePressed()
 
 		if (object->OverlapsPoint(mouseX, mouseY))
 		{
-			capturedObject = object;
-			object->HandleLeftMousePressed();
+			pressedObject = object;
+			object->HandleLeftMousePressed(mouseX, mouseY);
 			break;
 		}
+	}
+
+	if (focusedObject && pressedObject != focusedObject)
+	{
+		focusedObject->HandleFocusLost();
+		focusedObject = nullptr;
 	}
 }
 
 void MenuWindow::HandleLeftMouseReleased()
 {
-	if (capturedObject == nullptr)
+	if (pressedObject == nullptr)
 	{
 		return;
 	}
 
-	capturedObject->HandleLeftMouseReleased(capturedObject->OverlapsPoint(mouseX, mouseY));
-	capturedObject = nullptr;
+	pressedObject->HandleLeftMouseReleased(pressedObject->OverlapsPoint(mouseX, mouseY), mouseX, mouseY);
+	focusedObject = pressedObject;
+	pressedObject = nullptr;
 }
 
 void MenuWindow::HandleEscPressed()

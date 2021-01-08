@@ -30,6 +30,8 @@ void MenuController::Update(UpdateData* data)
 	window->SetMouseX(data->mouseX);
 	window->SetMouseY(data->mouseY);
 
+	window->HandleHover();
+
 	if (data->mousePressed)
 	{
 		window->HandleLeftMousePressed();

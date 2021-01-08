@@ -173,12 +173,12 @@ bool ButtonPackage::Button::OverlapsPoint(float xpos, float ypos)
 		&& (ypos > originY && ypos < originY + height);
 }
 
-void ButtonPackage::Button::HandleLeftMousePressed()
+void ButtonPackage::Button::HandleLeftMousePressed(float x, float y)
 {
 	pressed.val = true;
 }
 
-void ButtonPackage::Button::HandleLeftMouseReleased(bool releasedOnObject)
+void ButtonPackage::Button::HandleLeftMouseReleased(bool releasedOnObject, float x, float y)
 {
 	if (!pressed.val)
 	{

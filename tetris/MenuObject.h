@@ -11,11 +11,16 @@ class MenuObject
 {
 public:
 	MenuObject(float originX, float originY);
+	MenuObject(Matrix* projection, Shader* shader, float originX, float originY);
 	MenuObject(Matrix* projection, Shader *shader, float originX, float originY, int width, int height);
 
 	virtual bool OverlapsPoint(float x, float y) = 0;
-	virtual void HandleLeftMousePressed() = 0;
-	virtual void HandleLeftMouseReleased(bool releasedOnObject) = 0;
+	virtual void HandleLeftMousePressed(float x, float y) = 0;
+	virtual void HandleLeftMouseReleased(bool releasedOnObject, float x, float y) = 0;
+	virtual void HandleFocus();
+	virtual void HandleFocusLost();
+	virtual void HandleHover(float x, float y);
+	virtual void HandleHoverLost();
 	virtual void Render() = 0;
 	virtual void SetOriginX(int originX);
 	virtual void SetOriginY(int originY);

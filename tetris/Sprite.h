@@ -14,8 +14,8 @@ public:
 
 	void Render();
 	bool OverlapsPoint(float x, float y);
-	void HandleLeftMousePressed();
-	void HandleLeftMouseReleased(bool releasedOnObject);
+	void HandleLeftMousePressed(float x, float y);
+	void HandleLeftMouseReleased(bool releasedOnObject, float x, float y);
 
 	int imageWidth, imageHeight;
 private:

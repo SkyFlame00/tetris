@@ -19,6 +19,7 @@ public:
 
 	void Render(std::string text, float x, float y, float scale, glm::vec3 color);
 	void GetMeasurements(std::string text, int* textWidth, int* textHeight);
+	int GetMaxGlyphHeight();
 
 	int baselineShift, referenceSize, maxAscent, maxDescent;
 private:

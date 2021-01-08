@@ -15,15 +15,15 @@ bool PlainText::OverlapsPoint(float xpos, float ypos)
 		&& (ypos > originY && ypos < originY + height);
 }
 
-void PlainText::HandleLeftMousePressed()
+void PlainText::HandleLeftMousePressed(float x, float y)
 {
 }
 
-void PlainText::HandleLeftMouseReleased(bool releasedOnObject)
+void PlainText::HandleLeftMouseReleased(bool releasedOnObject, float x, float y)
 {
 }
 
 void PlainText::Render()
 {
-	textRenderer->Render(text, originX, originY, 1.0f, color);
+	textRenderer->Render(text, originX, textRenderer->maxAscent + originY, 1.0f, color);
 }

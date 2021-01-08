@@ -23,6 +23,7 @@
 #include "MainMenuWindow.h"
 #include "SettingsWindow.h"
 #include "PlainText.h"
+#include "Dropdown.h"
 
 typedef void (*WindowCallback)(GLFWwindow* window);
 
@@ -69,7 +70,7 @@ private:
 	Shader* spriteShader;
 	Matrix* spriteProjection;
 	GLFWwindow* appWindow;
-	TextRenderer* textRenderer_72;
+	TextRenderer* textRenderer_54, * textRenderer_32;
 
 	void Menu();
 	void InitMainMenu();

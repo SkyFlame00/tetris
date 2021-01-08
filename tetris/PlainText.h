@@ -13,8 +13,8 @@ public:
 	~PlainText();
 
 	bool OverlapsPoint(float xpos, float ypos);
-	void HandleLeftMousePressed();
-	void HandleLeftMouseReleased(bool releasedOnObject);
+	void HandleLeftMousePressed(float x, float y);
+	void HandleLeftMouseReleased(bool releasedOnObject, float x, float y);
 	void Render();
 private:
 	TextRenderer* textRenderer;

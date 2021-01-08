@@ -138,21 +138,69 @@ void Game::InitMainMenu()
 
 void Game::InitSettings()
 {
+	using namespace Layout;
+
 	SettingsWindow* window = new SettingsWindow(&menuController);
 	menuController.AddWindow(window, "settings");
 
-	textRenderer_72 = textRenderer = FontLoader::Load(projection.matrix, (char*)"fonts/calibri.ttf", 0, 54);
-	PlainText* settingsTitle = new PlainText(textRenderer, "Settings", glm::vec3(0.0f, 0.0f, 0.0f));
-
+	/* Settings title */
+	textRenderer_54 = FontLoader::Load(projection.matrix, (char*)"fonts/calibri.ttf", 0, 54);
+	PlainText* settingsTitle = new PlainText(textRenderer_54, "Settings", glm::vec3(0.0f, 0.0f, 0.0f));
 	window->AddObject(settingsTitle);
 
+	/* Resolution dropdown */
+	LayoutContainer* rdContainer = new LayoutContainer(e_Flow::VERTICAL);
+	rdContainer->marginTop = 40.0;
+
+	LayoutContainer* rdTitleContainer = new LayoutContainer(e_Flow::VERTICAL, 300, 80);
+	rdTitleContainer->SetAlignment(e_Alignment::CENTER);
+	textRenderer_32 = FontLoader::Load(projection.matrix, (char*)"fonts/calibri.ttf", 0, 32);
+	PlainText* rdTitle = new PlainText(textRenderer_32, "Screen resolution", glm::vec3(0.0f, 0.0f, 0.0f));
+	LayoutElement* rdTitleElem = new LayoutElement(rdTitle, 0, 0, 0, 0);
+	window->AddObject(rdTitle);
+	rdTitleContainer->AddElement(rdTitleElem);
+
+	DropdownPackage::Options options;
+	options.push_back(std::pair < std::string, std::string >("Option 1", "key_1"));
+	options.push_back(std::pair < std::string, std::string >("Option 2", "key_2"));
+	options.push_back(std::pair < std::string, std::string >("Option 3", "key_2"));
+	options.push_back(std::pair < std::string, std::string >("Option 4", "key_2"));
+	options.push_back(std::pair < std::string, std::string >("Option 5", "key_2"));
+	options.push_back(std::pair < std::string, std::string >("Option 6", "key_2"));
+	options.push_back(std::pair < std::string, std::string >("Option 7", "key_2"));
+
+	DropdownPackage::Settings rdSettings = {
+		options,
+		DropdownPackage::Theme::DEFAULT,
+		200,
+		"key_1"
+	};
+
+	DropdownPackage::Dropdown* resolutionDropdown = new DropdownPackage::Dropdown(
+		&projection, new Shader("shaders/dropdown.vert.glsl", "shaders/dropdown.frag.glsl"), textRenderer, &rdSettings, nullptr);
+	
+	resolutionDropdown->OnChange([](DropdownPackage::Option option, void* eventData)
+		{
+			std::cout << "Chosen: (" << option.first << ", " << option.second << ")" << std::endl;
+		}
+	);
+	window->AddObject(resolutionDropdown);
+	LayoutContainer* rdDropdownContainer = new LayoutContainer(e_Flow::VERTICAL, 300, 80);
+	rdDropdownContainer->SetAlignment(e_Alignment::CENTER);
+	LayoutElement* rdDropdownElem = new LayoutElement(resolutionDropdown, 0, 0, 0, 0);
+	rdDropdownContainer->AddElement(rdDropdownElem);
+
+	rdContainer->AddElement(rdTitleContainer);
+	rdContainer->AddElement(rdDropdownContainer);
+
 	/* Layout */
-	using namespace Layout;
 	LayoutContainer* layoutContainer = new LayoutContainer;
 	LayoutElement* settingsTitleEl = new LayoutElement(settingsTitle, 0, 0, 0, 0);
+	LayoutElement* resolutionDropdownEl = new LayoutElement(resolutionDropdown, 0, 0, 0, 0);
 	layoutContainer->AddElement(settingsTitleEl);
+	layoutContainer->AddElement(rdContainer);
 	layoutContainer->SetOriginX(xunits / 2 - layoutContainer->GetWidth() / 2);
-	layoutContainer->SetOriginY(textRenderer_72->maxAscent + 40.0f);
+	layoutContainer->SetOriginY(40.0f);
 	layoutContainer->SetAlignment(e_Alignment::CENTER);
 }
 
@@ -168,7 +216,7 @@ void Game::SetProjection(int xunits, int yunits)
 
 	if (projection.loc == -1)
 	{
-		std::cout << "ERROR::GAME::SET_PROJECTION: Location of projection matrix cannot be found." << std::endl;
+		std::cout << "ERROR::GAME::SET_PROJECTION: Location of projection matrix could not be found." << std::endl;
 		return;
 	}
 }

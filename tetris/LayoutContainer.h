@@ -40,7 +40,6 @@ namespace Layout {
 		void SetOriginY(int originY);
 
 		e_Alignment alignment;
-		int marginLeft, marginRight, marginTop, marginBottom;
 	private:
 		int originX, originY, nextX, nextY, maxElemWidth, maxElemHeight;
 		std::list<LayoutEntity*> entities;

@@ -9,6 +9,16 @@ MenuObject::MenuObject(float originX, float originY)
 {
 }
 
+MenuObject::MenuObject(Matrix* projection, Shader* shader, float originX, float originY)
+	: shader(shader),
+	  VAO(0),
+	  VBO(0),
+	  originX(originX),
+	  originY(originY),
+	  projection(projection)
+{
+}
+
 MenuObject::MenuObject(Matrix* projection, Shader *shader, float originX, float originY, int width, int height)
 	: shader(shader),
 	  VAO(0),
@@ -61,4 +71,20 @@ int MenuObject::GetWidth()
 int MenuObject::GetHeight()
 {
 	return height;
+}
+
+void MenuObject::HandleFocus()
+{
+}
+
+void MenuObject::HandleFocusLost()
+{
+}
+
+void MenuObject::HandleHover(float x, float y)
+{
+}
+
+void MenuObject::HandleHoverLost()
+{
 }

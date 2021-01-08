@@ -108,6 +108,9 @@
     <ClCompile Include="PlainText.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Dropdown.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -191,6 +194,9 @@
     <ClInclude Include="PlainText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Dropdown.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\rect.vert.glsl">
@@ -222,6 +228,12 @@
     </None>
     <None Include="shader.vert">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="shaders\dropdown.frag.glsl">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\dropdown.vert.glsl">
+      <Filter>Source Files\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>
